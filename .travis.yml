@@ -1,0 +1,23 @@
+sudo: required
+servies:
+  - docker
+
+before_install:
+  - docker build -t mdjamaddar/react-test -f ./client-app/Dockerfile.dev ./client-app
+
+script:
+  - docker run mdjamaddar/react-test npm test -- --coverage
+
+after_success:
+  - docker build -t mdjamaddar/multi-client-app ./client-app
+  - docker build -t mdjamaddar/multi-nginx ./nginx
+  - docker build -t mdjamaddar/multi-server-app ./server-app
+  - docker build -t mdjamaddar/multi-worker-app ./worker-app
+  # Log in to docker CLI
+  - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_ID" --password-stdin
+  # Take those images and push them to docker hub
+  - docker push mdjamaddar/multi-client-app
+  - docker push mdjamaddar/multi-nginx
+  - docker push mdjamaddar/multi-server-app
+  - docker push mdjamaddar/multi-worker-app
+  
