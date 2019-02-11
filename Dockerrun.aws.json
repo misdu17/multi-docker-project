@@ -1,0 +1,36 @@
+{
+  "AWSEBDockerrunVersion": 2,
+  "containerDefinitions": [
+    {
+      "name": "client-app",
+      "image": "mdjamaddar/multi-client-app",
+      "hostname": "client-app",
+      "essential": false
+    },
+    {
+      "name": "server-app",
+      "image": "mdjamaddar/multi-server-app",
+      "hostname": "server-app",
+      "essential": false
+    },
+    {
+      "name": "worker-app",
+      "image": "mdjamaddar/multi-worker-app",
+      "hostname": "worker-app",
+      "essential": false
+    },
+    {
+      "name": "nginx",
+      "image": "mdjamaddar/multi-nginx",
+      "hostname": "nginx",
+      "essential": true,
+      "portMappings": [
+        {
+          "hostPort": 80,
+          "containerPort": 80
+        }
+      ],
+      "links": ["client-app", "server-app"]
+    }
+  ]
+}
